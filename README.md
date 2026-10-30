@@ -39,7 +39,7 @@ These commands check patch application, core package installation and CLI discov
 
 ## Check the standalone schema-17 handoff
 
-Build the `vc_object_store` Python extension from the same Villa commit using the package's `BUILD_NATIVE.md`, then extract and install the second package in its own Python 3.14 environment:
+Extract the schema-17 package first and install it in its own Python 3.14 environment. Then follow `work/schema17_portability_candidate_v5/BUILD_NATIVE.md` to build the `vc_object_store` extension from the same Villa commit for that environment before running the demo:
 
 ```sh
 cd ../..
@@ -47,13 +47,15 @@ tar -xzf packages/schema17_portability_source_v5.tar.gz -C work
 python3.14 -m venv work/importer-env
 work/importer-env/bin/python -m pip install ./work/schema17_portability_candidate_v5
 work/importer-env/bin/python -m pip check
+# Build the native extension per work/schema17_portability_candidate_v5/BUILD_NATIVE.md,
+# using work/importer-env/bin/python as PYTHON, before running the demo.
 work/importer-env/bin/vc-afv-standalone-demo \
   --native-pythonpath /path/to/native-build/python \
   --upstream-importer work/villa/vc_object_store/scripts/import_afv.py \
   --output-dir work/one-fiber-test
 ```
 
-Use a new output directory. The synthetic test checks the patched single-file handoff and geometry; the original main-file-only read failure was observed on the tested Mac and may depend on SQLite behavior. The package README describes an optional flag for requiring that baseline failure. This test does not need the model or CT.
+Replace `/path/to/native-build/python` with the native build's `python` directory, and use a new output directory. The synthetic test checks the patched single-file handoff and geometry; the original main-file-only read failure was observed on the tested Mac and may depend on SQLite behavior. The package README describes an optional flag for requiring that baseline failure. This test does not need the model or CT.
 
 ## Source and license boundaries
 
